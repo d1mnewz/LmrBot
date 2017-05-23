@@ -10,9 +10,9 @@ namespace LmrBot.Controllers
         private lmr db = new lmr();
 
         // GET: Intents
-        public string[] Index()
+        public async Task<ViewResult> Index()
         {
-            return new[] {"hi", "gsd"}; /*View(await db.Intents.ToListAsync());*/
+            return View(await db.Intents.ToListAsync());
         }
 
         // GET: Intents/Details/5
