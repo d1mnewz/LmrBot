@@ -4,17 +4,17 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web.Configuration;
 using System.Web.Http;
 using com.valgut.libs.bots.Wit;
 using Microsoft.Bot.Connector;
-using static Microsoft.Bot.Connector.ActivityTypes;
 
-namespace LmrBot
+namespace LmrBot.Controllers
 {
     [BotAuthentication]
     public class MessagesController : ApiController
     {
-        private static lmr db = new lmr();
+        protected static readonly lmr Db = new lmr();
         /// <summary>
         /// POST: api/Messages
         /// Receive a message from a user and reply to it
@@ -24,9 +24,8 @@ namespace LmrBot
             ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
             switch (activity.Type)
             {
-
-                case Message:
-                    WitClient wit = new WitClient("ZHKXGGSDV7VISTIZDWQOPWJ7DZYQ3APD");
+                case ActivityTypes.Message:
+                    WitClient wit = new WitClient(WebConfigurationManager.AppSettings["WitClientKey"]);
                     var msg = wit.Converse(activity.From.Id, activity.Text);
 
                     var intent = string.Empty;
@@ -73,27 +72,27 @@ namespace LmrBot
 
         private Activity HandleSystemMessage(Activity message)
         {
-            if (message.Type == DeleteUserData)
+            if (message.Type == ActivityTypes.DeleteUserData)
             {
                 // Implement user deletion here
                 // If we handle user deletion, return a real message
             }
-            else if (message.Type == ConversationUpdate)
+            else if (message.Type == ActivityTypes.ConversationUpdate)
             {
                 // Handle conversation state changes, like members being added and removed
                 // Use Activity.MembersAdded and Activity.MembersRemoved and Activity.Action for info
                 // Not available in all channels
             }
-            else if (message.Type == ContactRelationUpdate)
+            else if (message.Type == ActivityTypes.ContactRelationUpdate)
             {
                 // Handle add/remove from contact lists
                 // Activity.From + Activity.Action represent what happened
             }
-            else if (message.Type == Typing)
+            else if (message.Type == ActivityTypes.Typing)
             {
                 // Handle knowing tha the user is typing
             }
-            else if (message.Type == Ping)
+            else if (message.Type == ActivityTypes.Ping)
             {
             }
 
@@ -101,14 +100,13 @@ namespace LmrBot
         }
         private static string GetReplyFromDb(string intent)
         {
-            var arrToRandomFrom = db.Responses.Where(x => x.Intent.content == intent).ToArray();
+            var arrToRandomFrom = Db.Responses.Where(x => x.Intent.content == intent).ToArray();
             if (arrToRandomFrom.Length > 0)
-                return arrToRandomFrom[new Random().Next(arrToRandomFrom.Length)].content;
-            else
             {
-                var noreply = db.Responses.Where(x => x.Intent.content == "noreply").ToArray();
-                return noreply[new Random().Next(noreply.Length)].content;
+                return arrToRandomFrom[new Random().Next(arrToRandomFrom.Length)].content;
             }
+
+            return Db.Responses.Where(x => x.Intent.content == "noreply").ToArray()[new Random().Next(Db.Responses.Where(x => x.Intent.content == "noreply").ToArray().Length)].content;
         }
     }
 }
