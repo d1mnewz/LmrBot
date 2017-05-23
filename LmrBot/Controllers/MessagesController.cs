@@ -8,6 +8,7 @@ using System.Web.Configuration;
 using System.Web.Http;
 using com.valgut.libs.bots.Wit;
 using Microsoft.Bot.Connector;
+using Newtonsoft.Json.Linq;
 using Entity = com.valgut.libs.bots.Wit.Models.Entity;
 
 namespace LmrBot.Controllers
@@ -61,6 +62,25 @@ namespace LmrBot.Controllers
                                 ContentType = "image/png"
                             });
                             break;
+                        case "ЛКП":
+                            string searchQuery = "";
+                            activity.Text = activity.Text.ToLower();
+                            if (activity.Text.StartsWith("лкп пошук "))
+                            {
+                                searchQuery = activity.Text.Replace("лкп пошук ", "");
+                            }
+                            string json = "";
+                            using (WebClient cl = new WebClient())
+                            {
+                                json =
+                                    cl.DownloadString($"http://opendata.city-adm.lviv.ua/api/action/datastore_search?resource_id=b12f1a20-2b1e-4b60-aead-91c1c5b75a85&q={searchQuery}");
+                            }
+                            dynamic result = JObject.Parse(json);
+                            if (result.success == true)
+                                reply.Text =
+                                    $"За запитом {result.result.q} ми знайшли такі дані: {result.result.records[0].name}. {result.result.records[0].status} за адресою {result.result.records[0].adress_street} {result.result.records[0].adreess_building}. Директором є {result.result.records[0].director}";
+
+                            break;
                         // TODO
 
 
@@ -73,7 +93,7 @@ namespace LmrBot.Controllers
 
             }
             // return our reply to the user
-            
+
             HandleSystemMessage(activity);
 
             var response = Request.CreateResponse(HttpStatusCode.OK);
