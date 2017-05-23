@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Net;
 using System.Web.Mvc;
@@ -31,10 +32,16 @@ namespace LmrBot.Controllers
             return View(respons);
         }
 
-        // GET: Respons/Create
-        public ActionResult Create()
+        public ActionResult Create(int id = 0)
         {
-            ViewBag.intentId = new SelectList(db.Intents, "id", "content");
+            if (id != 0)
+                ViewBag.intentId = new SelectList(db.Intents, "id", "content", id);
+            else
+            {
+                var intents = db.Intents.ToArray();
+                ViewBag.intentId = new SelectList(db.Intents, "id", "content", intents.Length + 3);
+            }
+
             return View();
         }
 
