@@ -8,6 +8,7 @@ using System.Web.Configuration;
 using System.Web.Http;
 using com.valgut.libs.bots.Wit;
 using Microsoft.Bot.Connector;
+using Entity = com.valgut.libs.bots.Wit.Models.Entity;
 
 namespace LmrBot.Controllers
 {
@@ -25,15 +26,14 @@ namespace LmrBot.Controllers
             switch (activity.Type)
             {
                 case ActivityTypes.Message:
-                    WitClient wit = new WitClient(WebConfigurationManager.AppSettings["WitClientKey"]);
+                    WitClient wit = new WitClient("57O7M43QDRWRDPFTDU7ABTOYYCECYDTO");
                     var msg = wit.Converse(activity.From.Id, activity.Text);
 
                     var intent = string.Empty;
                     double conf = 0;
                     try
                     {
-                        var a = msg.entities["intent"];
-                        if (a != null)
+                        if (msg.entities["intent"] != null)
                         {
                             foreach (var z in msg.entities["intent"])
                             {
