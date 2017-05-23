@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Linq;
+﻿using System.Data.Entity;
 using System.Threading.Tasks;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
-using LmrBot;
 
 namespace LmrBot.Controllers
 {
@@ -16,9 +10,9 @@ namespace LmrBot.Controllers
         private lmr db = new lmr();
 
         // GET: Intents
-        public async Task<ActionResult> Index()
+        public string[] Index()
         {
-            return View(await db.Intents.ToListAsync());
+            return new[] {"hi", "gsd"}; /*View(await db.Intents.ToListAsync());*/
         }
 
         // GET: Intents/Details/5
