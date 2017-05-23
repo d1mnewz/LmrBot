@@ -51,6 +51,16 @@ namespace LmrBot.Controllers
                     Activity reply = activity.CreateReply();
                     switch (intent)
                     {
+                        case "cat":
+                            reply.Text = "Ловіть котика :)";
+                            reply.Attachments = new List<Attachment>();  //****** INIT
+                            var ts = DateTime.Now;
+                            reply.Attachments.Add(new Attachment()
+                            {
+                                ContentUrl = $"http://thecatapi.com/api/images/get?format=src&type=png&timestamp=" + $"{ts}",
+                                ContentType = "image/png"
+                            });
+                            break;
                         // TODO
 
 
