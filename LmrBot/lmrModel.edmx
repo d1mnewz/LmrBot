@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="lmrModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Intents">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="content" Type="nvarchar" MaxLength="512" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Photos">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="photoLink" Type="nvarchar" MaxLength="1024" Nullable="false" />
+          <Property Name="descrip" Type="nvarchar" MaxLength="1024" />
+        </EntityType>
+        <EntityType Name="Responses">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="content" Type="nvarchar" MaxLength="1024" />
+          <Property Name="intentId" Type="int" />
+        </EntityType>
+        <Association Name="FK__Responses__inten__3A81B327">
+          <End Role="Intents" Type="Self.Intents" Multiplicity="0..1" />
+          <End Role="Responses" Type="Self.Responses" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Intents">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Responses">
+              <PropertyRef Name="intentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="lmrModelStoreContainer">
+          <EntitySet Name="Intents" EntityType="Self.Intents" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Photos" EntityType="Self.Photos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Responses" EntityType="Self.Responses" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Responses__inten__3A81B327" Association="Self.FK__Responses__inten__3A81B327">
+            <End Role="Intents" EntitySet="Intents" />
+            <End Role="Responses" EntitySet="Responses" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="lmrModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Intent">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="content" Type="String" MaxLength="512" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Responses" Relationship="Self.FK__Responses__inten__3A81B327" FromRole="Intents" ToRole="Responses" />
+        </EntityType>
+        <EntityType Name="Photo">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="photoLink" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="descrip" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Respons">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="content" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" />
+          <Property Name="intentId" Type="Int32" />
+          <NavigationProperty Name="Intent" Relationship="Self.FK__Responses__inten__3A81B327" FromRole="Responses" ToRole="Intents" />
+        </EntityType>
+        <Association Name="FK__Responses__inten__3A81B327">
+          <End Role="Intents" Type="Self.Intent" Multiplicity="0..1" />
+          <End Role="Responses" Type="Self.Respons" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Intents">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Responses">
+              <PropertyRef Name="intentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="lmr" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Intents" EntityType="Self.Intent" />
+          <EntitySet Name="Photos" EntityType="Self.Photo" />
+          <EntitySet Name="Responses" EntityType="Self.Respons" />
+          <AssociationSet Name="FK__Responses__inten__3A81B327" Association="Self.FK__Responses__inten__3A81B327">
+            <End Role="Intents" EntitySet="Intents" />
+            <End Role="Responses" EntitySet="Responses" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="lmrModelStoreContainer" CdmEntityContainer="lmr">
+          <EntitySetMapping Name="Intents">
+            <EntityTypeMapping TypeName="lmrModel.Intent">
+              <MappingFragment StoreEntitySet="Intents">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="content" ColumnName="content" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Photos">
+            <EntityTypeMapping TypeName="lmrModel.Photo">
+              <MappingFragment StoreEntitySet="Photos">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="photoLink" ColumnName="photoLink" />
+                <ScalarProperty Name="descrip" ColumnName="descrip" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Responses">
+            <EntityTypeMapping TypeName="lmrModel.Respons">
+              <MappingFragment StoreEntitySet="Responses">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="content" ColumnName="content" />
+                <ScalarProperty Name="intentId" ColumnName="intentId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
