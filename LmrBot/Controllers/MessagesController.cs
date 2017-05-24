@@ -4,12 +4,10 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.Configuration;
 using System.Web.Http;
 using com.valgut.libs.bots.Wit;
 using Microsoft.Bot.Connector;
 using Newtonsoft.Json.Linq;
-using Entity = com.valgut.libs.bots.Wit.Models.Entity;
 
 namespace LmrBot.Controllers
 {
@@ -79,6 +77,9 @@ namespace LmrBot.Controllers
                             if (result.success == true)
                                 reply.Text =
                                     $"За запитом {result.result.q} ми знайшли такі дані: {result.result.records[0].name}. {result.result.records[0].status} за адресою {result.result.records[0].adress_street} {result.result.records[0].adreess_building}. Директором є {result.result.records[0].director}";
+                            if (result.result.q == "львівсвітло")
+                                reply.Text += @"Контактні номери:	+38 (032) 242-19-33
+                                              + 38(067) 341 - 33 - 75";
 
                             break;
                         // TODO
