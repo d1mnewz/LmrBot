@@ -78,8 +78,7 @@ namespace LmrBot.Controllers
                                 reply.Text =
                                     $"За запитом {result.result.q} ми знайшли такі дані: {result.result.records[0].name}. {result.result.records[0].status} за адресою {result.result.records[0].adress_street} {result.result.records[0].adreess_building}. Директором є {result.result.records[0].director}";
                             if (result.result.q == "львівсвітло")
-                                reply.Text += @"Контактні номери:	+38 (032) 242-19-33
-                                              + 38(067) 341 - 33 - 75";
+                                reply.Text += @" Контактні номери:	+38 (032) 242-19-33  +38 (067) 341-33-75";
 
                             break;
                         // TODO
